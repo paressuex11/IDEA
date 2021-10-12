@@ -25,6 +25,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install   requests bs4
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
   run-script:
 
     runs-on: ubuntu-latest
@@ -35,6 +36,28 @@ jobs:
     - name: run python file
       run: |
         python codecademy_games.py
- 
+
+
+
+  bot:
+    runs-on: ubuntu-latest
+    steps:
+    # 首先copy git仓库到虚拟机上
+      - name: 'Checkout codes'
+        uses: actions/checkout@v1
+      # 获取格式化的日期并存入GitHub内置的环境变量中
+      - name: 'Get Date'
+        run: echo "REPORT_DATE=$(TZ=':Asia/Shanghai' date '+%Y-%m-%d %T')" >> $GITHUB_ENV
+      # 使用现成的发送邮箱的GitHub action来发送邮件
+      - name: 'Send mail'
+        uses: dawidd6/action-send-mail@master
+        with:
+          # 这些是发送邮件需要配置的参数，更多详细的说明请访问具体的仓库
+          server_address: smtp.qq.com
+          server_port: 465
+          # 这些sectret的环境变量需要配置在setting中的secret下
+          subject: 天气预报 
+          to: 1138514846@qq.com
+          from: GitHub Actions
 
  
